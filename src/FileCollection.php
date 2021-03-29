@@ -51,8 +51,6 @@ class FileCollection implements CollectionInterface
         $data = '';
 
         if(is_array($value)) {
-            $data .= '[';
-
             foreach ($value as $key => $val) {
                 $data .= $val;
 
@@ -60,8 +58,6 @@ class FileCollection implements CollectionInterface
                     $data .= ', ';
                 }
             }
-
-            $data .= ']';
         } else {
             $data = $value;
         }
@@ -85,7 +81,20 @@ class FileCollection implements CollectionInterface
      */
     public function count(): int
     {
-        return count($this->data);
+        $file = fopen($this->filename, 'r');
+
+        $data = [];
+        while(!feof($file)) {
+            $row = explode(';', fgets($file));
+            $value = explode(':', $row[0]);
+
+            if(isset($value[1])) {
+                $data[] = $value[1];
+            }
+        }
+
+        fclose($file);
+        return count($data);
     }
 
     /**
