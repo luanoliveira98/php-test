@@ -17,13 +17,6 @@ class FileCollection implements CollectionInterface
     protected $filename = 'files/example.txt';
 
     /**
-     * Collection data
-     *
-     * @var array
-     */
-    protected $data;
-
-    /**
      * File
      * 
      * @var false|resource
@@ -35,7 +28,6 @@ class FileCollection implements CollectionInterface
      */
     public function __construct()
     {
-        $this->data = [];
         $this->file = fopen($this->filename, 'w+');
     }
 
@@ -44,8 +36,11 @@ class FileCollection implements CollectionInterface
      */
     public function get(string $index, $defaultValue = null)
     {
+        if(!$this->has($index)) {
+            return $defaultValue;
+        }
 
-       return $this->read($index);
+        return $this->read($index);
     }
 
     /**
@@ -81,7 +76,8 @@ class FileCollection implements CollectionInterface
      */
     public function has(string $index)
     {
-        return array_key_exists($index, $this->data);
+        $exists = $this->read($index);
+        return ($exists)? true : false;
     }
 
     /**

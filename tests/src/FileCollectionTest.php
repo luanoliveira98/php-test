@@ -42,4 +42,38 @@ class FileCollectionTest extends TestCase
 
         $this->assertEquals('value', $collection->get('index1'));
     }
+    
+    /**
+     * @test
+     * @depends dataCanBeAdded
+     */
+    public function dataCanBeRetrievedArray()
+    {
+        $collection = new FileCollection();
+        $collection->set('index5', ['data','data1','data2']);
+
+        $this->assertIsArray($collection->get('index5'));
+    }
+
+    /**
+     * @test
+     * @depends objectCanBeConstructed
+     */
+    public function inexistentIndexShouldReturnDefaultValue()
+    {
+        $collection = new FileCollection();
+
+        $this->assertNull($collection->get('index1'));
+        $this->assertEquals('defaultValue', $collection->get('index1', 'defaultValue'));
+    }
+
+    /**
+     * @test
+     * @depends objectCanBeConstructed
+     */
+    public function newCollectionShouldNotContainItems()
+    {
+        $collection = new FileCollection();
+        $this->assertEquals(0, $collection->count());
+    }
 }
