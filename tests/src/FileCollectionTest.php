@@ -10,7 +10,7 @@ class FileCollectionTest extends TestCase
      * @test
      * @doesNotPerformAssertions
      */
-    public function objectCanBeConstructed()
+    public function objectCanBeConstructed(): FileCollection
     {
         $collection = new FileCollection();
         return $collection;

@@ -10,11 +10,25 @@ namespace Live\Collection;
 class FileCollection implements CollectionInterface
 {
     /**
-     * Collection data
+     * File name
      * 
-     * @var
+     * @var string
+     */
+    protected $filename = 'files/example.txt';
+
+    /**
+     * Collection data
+     *
+     * @var array
      */
     protected $data;
+
+    /**
+     * File
+     * 
+     * @var false|resource
+     */
+    protected $file;
 
     /**
      * Constructor
@@ -22,6 +36,7 @@ class FileCollection implements CollectionInterface
     public function __construct()
     {
         $this->data = [];
+        $this->file = fopen($this->filename, 'w+');
     }
 
     /**
