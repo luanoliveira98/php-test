@@ -56,7 +56,19 @@ class FileCollection implements CollectionInterface
      */
     public function set(string $index, $value)
     {
-        $this->data[$index] = $value;
+        $data = '';
+
+        if(is_array($value)) {
+            foreach ($value as $val) {
+                $data .= $val.' ';
+            }
+        } else {
+            $data = $value;
+        }
+
+        $dataWrote = $index . ' -> ' . $data . PHP_EOL;
+        return fwrite($this->file, $dataWrote);
+
     }
 
     /**
