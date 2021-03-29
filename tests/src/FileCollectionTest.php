@@ -76,4 +76,19 @@ class FileCollectionTest extends TestCase
         $collection = new FileCollection();
         $this->assertEquals(0, $collection->count());
     }
+
+    /**
+     * @test
+     * @depends dataCanBeAdded
+     */
+    public function collectionWithItemsShouldReturnValidCount()
+    {
+        $collection = new FileCollection();
+        $collection->set('index1', 'value');
+        $collection->set('index2', 5);
+        $collection->set('index3', true);
+        $collection->set('index5', ['data','data1','data2']);
+
+        $this->assertEquals(4, $collection->count());
+    }
 }
