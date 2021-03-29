@@ -15,4 +15,19 @@ class FileCollectionTest extends TestCase
         $collection = new FileCollection();
         return $collection;
     }
+
+    /**
+     * @test
+     * @depends objectCanBeConstructed
+     * @doesNotPerformAssertions
+     */
+    public function dataCanBeAdded()
+    {
+        $collection = new FileCollection();
+        $collection->set('index1', 'value');
+        $collection->set('index2', 5);
+        $collection->set('index3', true);
+        $collection->set('index4', 6.5);
+        $collection->set('index5', ['data']);
+    }
 }
