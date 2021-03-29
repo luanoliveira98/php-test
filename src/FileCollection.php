@@ -113,12 +113,22 @@ class FileCollection implements CollectionInterface
             $row = explode(';', fgets($file));
             $value = explode(':', $row[0]);
             if($value[0] == $index) {
+
+                $isArray = explode(',', $value[1]);
+
+                if(isset($isArray[1])) {
+                        $value[1] = [];
+                    for($i = 0; $i < count($isArray); $i++) {
+                        $value[1][] = $isArray[$i];
+                    }
+                }
+                
                 fclose($file);
                 return $value[1];
                 break;
             }
         }
-
+        fclose($file);
         return ;
     }
 }
