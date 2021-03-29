@@ -44,11 +44,8 @@ class FileCollection implements CollectionInterface
      */
     public function get(string $index, $defaultValue = null)
     {
-        if(!$this->has($index)) {
-            return $defaultValue;
-        }
 
-        return $this->data[$index];
+       return $this->read($index);
     }
 
     /**
@@ -74,7 +71,7 @@ class FileCollection implements CollectionInterface
             $data = $value;
         }
 
-        $dataWrote = $index . ' -> ' . $data . PHP_EOL;
+        $dataWrote = $index . ':' . $data . ';' . PHP_EOL;
         return fwrite($this->file, $dataWrote);
 
     }
@@ -101,5 +98,22 @@ class FileCollection implements CollectionInterface
     public function clean()
     {
         $this->data = [];
+    }
+
+    public function read(string $index)
+    {
+        $file = fopen($this->filename, 'r');
+
+        while(!feof($file)) {
+            $row = explode(';', fgets($file));
+            $value = explode(':', $row[0]);
+            if($value[0] == $index) {
+                fclose($file);
+                return $value[1];
+                break;
+            }
+        }
+
+        return ;
     }
 }
