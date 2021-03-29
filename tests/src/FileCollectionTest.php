@@ -91,4 +91,18 @@ class FileCollectionTest extends TestCase
 
         $this->assertEquals(4, $collection->count());
     }
+    
+    /**
+     * @test
+     * @depends collectionWithItemsShouldReturnValidCount
+     */
+    public function collectionCanBeCleaned()
+    {
+        $collection = new FileCollection();
+        $collection->set('index', 'value');
+        $this->assertEquals(1, $collection->count());
+
+        $collection->clean();
+        $this->assertEquals(0, $collection->count());
+    }
 }

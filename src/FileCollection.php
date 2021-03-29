@@ -102,7 +102,7 @@ class FileCollection implements CollectionInterface
      */
     public function clean()
     {
-        $this->data = [];
+        new FileCollection();
     }
 
     public function read(string $index)
