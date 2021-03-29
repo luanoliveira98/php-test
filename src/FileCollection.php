@@ -59,9 +59,17 @@ class FileCollection implements CollectionInterface
         $data = '';
 
         if(is_array($value)) {
-            foreach ($value as $val) {
-                $data .= $val.' ';
+            $data .= '[';
+
+            foreach ($value as $key => $val) {
+                $data .= $val;
+
+                if($key !== array_key_last($value)) {
+                    $data .= ', ';
+                }
             }
+
+            $data .= ']';
         } else {
             $data = $value;
         }
