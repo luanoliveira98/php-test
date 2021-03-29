@@ -28,6 +28,18 @@ class FileCollectionTest extends TestCase
         $collection->set('index2', 5);
         $collection->set('index3', true);
         $collection->set('index4', 6.5);
-        $collection->set('index5', ['data']);
+        $collection->set('index5', ['data', 'data2', 'data3']);
+    }
+
+    /**
+     * @test
+     * @depends dataCanBeAdded
+     */
+    public function dataCanBeRetrieved()
+    {
+        $collection = new FileCollection();
+        $collection->set('index1', 'value');
+
+        $this->assertEquals('value', $collection->get('index1'));
     }
 }
