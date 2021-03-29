@@ -105,4 +105,16 @@ class FileCollectionTest extends TestCase
         $collection->clean();
         $this->assertEquals(0, $collection->count());
     }
+    
+    /**
+     * @test
+     * @depends dataCanBeAdded
+     */
+    public function addedItemShouldExistInCollection()
+    {
+        $collection = new FileCollection();
+        $collection->set('index', 'value');
+
+        $this->assertTrue($collection->has('index'));
+    }
 }
