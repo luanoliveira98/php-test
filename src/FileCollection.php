@@ -24,6 +24,13 @@ class FileCollection implements CollectionInterface
     protected $file;
 
     /**
+     * Collection defaultExpirationTime
+     * 
+     * @var int
+     */
+    protected $defaultExpirationTime = 60;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -40,14 +47,24 @@ class FileCollection implements CollectionInterface
             return $defaultValue;
         }
 
+        if($this->isExpired($index)) {
+            return null;
+        }
+
         return $this->read($index);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function set(string $index, $value)
+    public function set(string $index, $value, $expirationTime = null)
     {
+        if ($expirationTime === null || $expirationTime < 0) {
+            $expirationTime = time() + $this->defaultExpirationTime;
+        } else if($expirationTime > 0) {
+            $expirationTime = time() + $expirationTime;
+        }
+
         $data = '';
 
         if(is_array($value)) {
@@ -62,7 +79,7 @@ class FileCollection implements CollectionInterface
             $data = $value;
         }
 
-        $dataWrote = $index . ':' . $data . ';' . PHP_EOL;
+        $dataWrote = $index . ':' . $data . ';' . $expirationTime . '|' . PHP_EOL;
         return fwrite($this->file, $dataWrote);
 
     }
@@ -74,6 +91,14 @@ class FileCollection implements CollectionInterface
     {
         $exists = $this->read($index);
         return ($exists)? true : false;
+    }
+
+    public function isExpired(string $index)
+    {
+        if(time() <= $this->readTimeExpiration($index)) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -105,6 +130,9 @@ class FileCollection implements CollectionInterface
         new FileCollection();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function read(string $index)
     {
         $file = fopen($this->filename, 'r');
@@ -125,9 +153,30 @@ class FileCollection implements CollectionInterface
                 
                 fclose($file);
                 return $value[1];
-                break;
             }
         }
+        fclose($file);
+        return ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function readTimeExpiration(string $index)
+    {
+        $file = fopen($this->filename, 'r');
+
+        while(!feof($file)) {
+            $row = explode(';', fgets($file));
+            $value = explode(':', $row[0]);
+
+            if($value[0] == $index) {
+                fclose($file);
+                $expirationTime = explode('|', $row[1]);
+                return $expirationTime[0];
+            }
+        }
+
         fclose($file);
         return ;
     }

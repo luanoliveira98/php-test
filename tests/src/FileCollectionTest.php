@@ -117,4 +117,45 @@ class FileCollectionTest extends TestCase
 
         $this->assertTrue($collection->has('index'));
     }
+    
+    /**
+     * @test
+     * @depends dataCanBeAdded
+     */
+    public function collectionShouldNotBeExpired()
+    {
+        $collection = new FileCollection();
+        $collection->set('index1', 'value', 30);
+
+        $this->assertFalse($collection->isExpired('index1'));
+
+
+        $collection->set('index2', '123');
+
+        $this->assertFalse($collection->isExpired('index2'));
+    }
+
+    /**
+     * @test
+     * @depends collectionShouldNotBeExpired
+     */
+    public function collectionShouldBeExpired()
+    {
+        $collection = new FileCollection();
+        $collection->set('index1', 'value', 0);
+
+        $this->assertTrue($collection->isExpired('index1'));
+    }
+
+    /**
+     * @test
+     * @depends collectionShouldBeExpired
+     */
+    public function dataCantBeRetrievedIfTimeIsExpired()
+    {
+        $collection = new FileCollection();
+        $collection->set('index1', 'value', 0);
+
+        $this->assertEquals(null, $collection->get('index1'));
+    }
 }
