@@ -43,11 +43,11 @@ class FileCollection implements CollectionInterface
      */
     public function get(string $index, $defaultValue = null)
     {
-        if(!$this->has($index)) {
+        if (!$this->has($index)) {
             return $defaultValue;
         }
 
-        if($this->isExpired($index)) {
+        if ($this->isExpired($index)) {
             return null;
         }
 
@@ -59,19 +59,19 @@ class FileCollection implements CollectionInterface
      */
     public function set(string $index, $value, $expirationTime = null)
     {
-        if ($expirationTime === null || $expirationTime < 0) {
+        if  ($expirationTime === null || $expirationTime < 0) {
             $expirationTime = time() + $this->defaultExpirationTime;
-        } else if($expirationTime > 0) {
+        } else if ($expirationTime > 0) {
             $expirationTime = time() + $expirationTime;
         }
 
         $data = '';
 
-        if(is_array($value)) {
+        if (is_array($value)) {
             foreach ($value as $key => $val) {
                 $data .= $val;
 
-                if($key !== array_key_last($value)) {
+                if ($key !== array_key_last($value)) {
                     $data .= ', ';
                 }
             }
@@ -95,7 +95,7 @@ class FileCollection implements CollectionInterface
 
     public function isExpired(string $index)
     {
-        if(time() <= $this->readTimeExpiration($index)) {
+        if (time() <= $this->readTimeExpiration($index)) {
             return false;
         }
         return true;
@@ -109,11 +109,11 @@ class FileCollection implements CollectionInterface
         $file = fopen($this->filename, 'r');
 
         $data = [];
-        while(!feof($file)) {
+        while (!feof($file)) {
             $row = explode(';', fgets($file));
             $value = explode(':', $row[0]);
 
-            if(isset($value[1])) {
+            if (isset($value[1])) {
                 $data[] = $value[1];
             }
         }
@@ -137,16 +137,16 @@ class FileCollection implements CollectionInterface
     {
         $file = fopen($this->filename, 'r');
 
-        while(!feof($file)) {
+        while (!feof($file)) {
             $row = explode(';', fgets($file));
             $value = explode(':', $row[0]);
-            if($value[0] == $index) {
+            if ($value[0] == $index) {
 
                 $isArray = explode(',', $value[1]);
 
-                if(isset($isArray[1])) {
+                if (isset($isArray[1])) {
                         $value[1] = [];
-                    for($i = 0; $i < count($isArray); $i++) {
+                    for ($i = 0; $i < count($isArray); $i++) {
                         $value[1][] = $isArray[$i];
                     }
                 }
@@ -166,11 +166,11 @@ class FileCollection implements CollectionInterface
     {
         $file = fopen($this->filename, 'r');
 
-        while(!feof($file)) {
+        while (!feof($file)) {
             $row = explode(';', fgets($file));
             $value = explode(':', $row[0]);
 
-            if($value[0] == $index) {
+            if ($value[0] == $index) {
                 fclose($file);
                 $expirationTime = explode('|', $row[1]);
                 return $expirationTime[0];

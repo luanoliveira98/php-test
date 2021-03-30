@@ -63,7 +63,7 @@ class MemoryCollection implements CollectionInterface
 
         if ($expirationTime === null || $expirationTime < 0) {
             $this->expirationTime[$index] = time() + $this->defaultExpirationTime;
-        } else if($expirationTime > 0) {
+        } else if ($expirationTime > 0) {
             $this->expirationTime[$index] = time() + $expirationTime;
         } else {
             $this->expirationTime[$index] = $expirationTime;
@@ -83,7 +83,7 @@ class MemoryCollection implements CollectionInterface
      */
     public function isExpired(string $index)
     {
-        if(time() <= $this->expirationTime[$index]) {
+        if (time() <= $this->expirationTime[$index]) {
             return false;
         }
         return true;
