@@ -47,6 +47,10 @@ class FileCollection implements CollectionInterface
             return $defaultValue;
         }
 
+        if($this->isExpired($index)) {
+            return null;
+        }
+
         return $this->read($index);
     }
 
