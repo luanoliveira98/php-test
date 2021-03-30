@@ -24,6 +24,13 @@ class FileCollection implements CollectionInterface
     protected $file;
 
     /**
+     * Collection defaultExpirationTime
+     * 
+     * @var int
+     */
+    protected $defaultExpirationTime = 60;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -46,8 +53,14 @@ class FileCollection implements CollectionInterface
     /**
      * {@inheritDoc}
      */
-    public function set(string $index, $value)
+    public function set(string $index, $value, $expirationTime = null)
     {
+        if ($expirationTime === null || $expirationTime < 0) {
+            $expirationTime = time() + $this->defaultExpirationTime;
+        } else if($expirationTime > 0) {
+            $expirationTime = time() + $expirationTime;
+        }
+
         $data = '';
 
         if(is_array($value)) {
@@ -62,7 +75,7 @@ class FileCollection implements CollectionInterface
             $data = $value;
         }
 
-        $dataWrote = $index . ':' . $data . ';' . PHP_EOL;
+        $dataWrote = $index . ':' . $data . ';' . $expirationTime . '|' . PHP_EOL;
         return fwrite($this->file, $dataWrote);
 
     }
