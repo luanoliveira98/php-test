@@ -89,6 +89,14 @@ class FileCollection implements CollectionInterface
         return ($exists)? true : false;
     }
 
+    public function isExpired(string $index)
+    {
+        if(time() <= $this->readTimeExpiration($index)) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -118,6 +126,9 @@ class FileCollection implements CollectionInterface
         new FileCollection();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function read(string $index)
     {
         $file = fopen($this->filename, 'r');
@@ -138,9 +149,30 @@ class FileCollection implements CollectionInterface
                 
                 fclose($file);
                 return $value[1];
-                break;
             }
         }
+        fclose($file);
+        return ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function readTimeExpiration(string $index)
+    {
+        $file = fopen($this->filename, 'r');
+
+        while(!feof($file)) {
+            $row = explode(';', fgets($file));
+            $value = explode(':', $row[0]);
+
+            if($value[0] == $index) {
+                fclose($file);
+                $expirationTime = explode('|', $row[1]);
+                return $expirationTime[0];
+            }
+        }
+
         fclose($file);
         return ;
     }
