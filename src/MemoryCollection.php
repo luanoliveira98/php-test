@@ -17,6 +17,20 @@ class MemoryCollection implements CollectionInterface
     protected $data;
 
     /**
+     * Collection expirationTime
+     * 
+     * @var
+     */
+    protected $expirationTime;
+
+    /**
+     * Collection defaultExpirationTime
+     * 
+     * @var int
+     */
+    protected $defaultExpirationTime = 60;
+
+    /**
      * Constructor
      */
     public function __construct()
