@@ -19,9 +19,9 @@ class MemoryCollection implements CollectionInterface
     /**
      * Collection expirationTime
      * 
-     * @var
+     * @var array
      */
-    protected $expirationTime;
+    protected $expirationTime = [];
 
     /**
      * Collection defaultExpirationTime
@@ -53,9 +53,15 @@ class MemoryCollection implements CollectionInterface
     /**
      * {@inheritDoc}
      */
-    public function set(string $index, $value)
+    public function set(string $index, $value, $expirationTime = null)
     {
         $this->data[$index] = $value;
+
+        if ($expirationTime == null) {
+            $this->expirationTime[$index] = time() + $this->defaultExpirationTime;
+        } else {
+            $this->expirationTime[$index] = time() + $expirationTime;
+        }
     }
 
     /**
@@ -64,6 +70,21 @@ class MemoryCollection implements CollectionInterface
     public function has(string $index)
     {
         return array_key_exists($index, $this->data);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isExpired(string $index)
+    {
+        if(array_key_exists($index, $this->expirationTime)) {
+            if(time() <= $this->expirationTime[$index]) {
+                return false;
+            }
+            return true;
+        }
+
+        return false;
     }
 
     /**
