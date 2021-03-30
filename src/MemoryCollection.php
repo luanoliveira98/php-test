@@ -57,10 +57,12 @@ class MemoryCollection implements CollectionInterface
     {
         $this->data[$index] = $value;
 
-        if ($expirationTime == null) {
+        if ($expirationTime === null || $expirationTime < 0) {
             $this->expirationTime[$index] = time() + $this->defaultExpirationTime;
-        } else {
+        } else if($expirationTime > 0) {
             $this->expirationTime[$index] = time() + $expirationTime;
+        } else {
+            $this->expirationTime[$index] = $expirationTime;
         }
     }
 

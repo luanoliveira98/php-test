@@ -124,14 +124,12 @@ class MemoryCollectionTest extends TestCase
 
     /**
      * @test
-     * @depends collectionShouldNotExpired
+     * @depends collectionShouldNotBeExpired
      */
     public function collectionShouldBeExpired()
     {
         $collection = new MemoryCollection();
-        $collection->set('index1', 'value', 1);
-
-        sleep(2);
+        $collection->set('index1', 'value', 0);
 
         $this->assertTrue($collection->isExpired('index1'));
     }
