@@ -77,14 +77,10 @@ class MemoryCollection implements CollectionInterface
      */
     public function isExpired(string $index)
     {
-        if(array_key_exists($index, $this->expirationTime)) {
-            if(time() <= $this->expirationTime[$index]) {
-                return false;
-            }
-            return true;
+        if(time() <= $this->expirationTime[$index]) {
+            return false;
         }
-
-        return false;
+        return true;
     }
 
     /**
