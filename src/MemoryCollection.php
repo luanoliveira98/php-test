@@ -47,6 +47,10 @@ class MemoryCollection implements CollectionInterface
             return $defaultValue;
         }
 
+        if ($this->isExpired($index)) {
+            return null;
+        }
+
         return $this->data[$index];
     }
 
