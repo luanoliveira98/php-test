@@ -43,7 +43,7 @@ class MemoryCollection implements CollectionInterface
     /**
      * {@inheritDoc}
      */
-    public function set(string $index, $value, $expirationTime = 60)
+    public function set(string $index, $value, int $expirationTime = 60)
     {
         $this->data[$index]['value'] = $value;
         if ($expirationTime == 0) {
