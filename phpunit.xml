@@ -8,8 +8,7 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          processIsolation="false"
-         stopOnFailure="false"
-         xdebug.mode = "coverage">
+         stopOnFailure="false">
     <testsuites>
         <testsuite name="Live eCommerce Test Suite">
             <directory>tests</directory>
