@@ -4,31 +4,24 @@ namespace Live\Collection;
 
 /**
  * File collection
- * 
+ *
  * @package Live\Collection
  */
 class FileCollection implements CollectionInterface
 {
     /**
      * File name
-     * 
+     *
      * @var string
      */
     protected $filename = 'files/example.txt';
 
     /**
      * File
-     * 
+     *
      * @var false|resource
      */
     protected $file;
-
-    /**
-     * Collection defaultExpirationTime
-     * 
-     * @var int
-     */
-    protected $defaultExpirationTime = 60;
 
     /**
      * Constructor
@@ -57,11 +50,9 @@ class FileCollection implements CollectionInterface
     /**
      * {@inheritDoc}
      */
-    public function set(string $index, $value, $expirationTime = null)
+    public function set(string $index, $value, int $expirationTime = 60)
     {
-        if  ($expirationTime === null || $expirationTime < 0) {
-            $expirationTime = time() + $this->defaultExpirationTime;
-        } else if ($expirationTime > 0) {
+        if ($expirationTime > 0) {
             $expirationTime = time() + $expirationTime;
         }
 
@@ -81,7 +72,6 @@ class FileCollection implements CollectionInterface
 
         $dataWrote = $index . ':' . $data . ';' . $expirationTime . '|' . PHP_EOL;
         return fwrite($this->file, $dataWrote);
-
     }
 
     /**
@@ -141,7 +131,6 @@ class FileCollection implements CollectionInterface
             $row = explode(';', fgets($file));
             $value = explode(':', $row[0]);
             if ($value[0] == $index) {
-
                 $isArray = explode(',', $value[1]);
 
                 if (isset($isArray[1])) {
