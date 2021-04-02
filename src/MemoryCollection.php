@@ -17,20 +17,6 @@ class MemoryCollection implements CollectionInterface
     protected $data;
 
     /**
-     * Collection expirationTime
-     * 
-     * @var array
-     */
-    protected $expirationTime = [];
-
-    /**
-     * Collection defaultExpirationTime
-     * 
-     * @var int
-     */
-    protected $defaultExpirationTime = 60;
-
-    /**
      * Constructor
      */
     public function __construct()
@@ -51,22 +37,19 @@ class MemoryCollection implements CollectionInterface
             return null;
         }
 
-        return $this->data[$index];
+        return $this->data[$index]['value'];
     }
 
     /**
      * {@inheritDoc}
      */
-    public function set(string $index, $value, $expirationTime = null)
+    public function set(string $index, $value, $expirationTime = 60)
     {
-        $this->data[$index] = $value;
-
-        if ($expirationTime === null || $expirationTime < 0) {
-            $this->expirationTime[$index] = time() + $this->defaultExpirationTime;
-        } else if ($expirationTime > 0) {
-            $this->expirationTime[$index] = time() + $expirationTime;
+        $this->data[$index]['value'] = $value;
+        if ($expirationTime == 0) {
+            $this->data[$index]['expirationTime'] = $expirationTime;
         } else {
-            $this->expirationTime[$index] = $expirationTime;
+            $this->data[$index]['expirationTime'] = time() + $expirationTime;
         }
     }
 
@@ -83,7 +66,7 @@ class MemoryCollection implements CollectionInterface
      */
     public function isExpired(string $index)
     {
-        if (time() <= $this->expirationTime[$index]) {
+        if (time() <= $this->data[$index]['expirationTime']) {
             return false;
         }
         return true;
