@@ -62,7 +62,7 @@ class FileCollection implements CollectionInterface
             foreach ($value as $key => $val) {
                 $data .= $val;
 
-                if ($key !== array_key_last($value)) {
+                if ($key !== count($value)) {
                     $data .= ', ';
                 }
             }
