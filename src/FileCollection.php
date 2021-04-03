@@ -165,8 +165,5 @@ class FileCollection implements CollectionInterface
                 return $expirationTime[0];
             }
         }
-
-        fclose($file);
-        return ;
     }
 }
